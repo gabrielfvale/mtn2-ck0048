@@ -1,5 +1,5 @@
 import cv2
-
+from typing import Callable, List
 import numpy as np
 
 class Image:
@@ -10,18 +10,23 @@ class Image:
     Loads an image in grayscale
     '''
     self.path = path
-    # Read image
-    self.image = cv2.imread(path)
-    # Convert to grayscale
-    self.image = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
-    # Normalize
-    self.image = cv2.normalize(self.image, None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
+    self.image = cv2.imread(path) # Read image
+    self.original = self.image.copy()
+
+    self.image = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY) # Convert to grayscale
+    self.image = cv2.normalize(
+      self.image,
+      None,
+      alpha=0, beta=1,
+      norm_type=cv2.NORM_MINMAX,
+      dtype=cv2.CV_32F
+    ) # Normalize
 
   def __str__(self) -> str:
     return self.image.shape
 
 
-  def display(self) -> None:
+  def display_treated(self) -> None:
     '''
     Displays the current image in a window.
     '''
@@ -32,16 +37,37 @@ class Image:
     cv2.destroyAllWindows()
 
 
-  def apply_filter(self, filter, iterations = 1):
-    print('Applying filters to ' + self.path)
-    rows, cols = self.image.shape
-    def_img = self.image
-    # Expands image matrix by 1 pixel in each border
-    pad_img = np.pad(def_img, (1, 1), 'constant')
+  def display(self) -> None:
+    '''
+    Displays a comparison of the original image and the treated one
+    '''
+    print('Displaying images. Press ESC to exit.')
+    cv2.imshow(self.path + ' (original)', self.original)
+    cv2.imshow(self.path + ' (treated)', self.image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
-    for k in range(iterations):
+
+  def apply_filter(self, filter):
+    '''
+    Applies a filter (function) to an image
+    '''
+    rows, cols = self.image.shape
+    # Expands image matrix by 1 pixel in each border
+    pad_img = np.pad(self.image, (1, 1), 'constant')
+
+    if type(filter) is list:
+      print('Applying %s filters to %s' % (len(filter), self.path))
+      for func in filter:
+        for i in range(1, rows):
+          for j in range(1, cols):
+            pad_img[i, j] = func(pad_img, i, j)
+
+    else:
+      print('Applying filter to %s' % (self.path))
       for i in range(1, rows):
         for j in range(1, cols):
-          pad_img[i, j] = filter(pad_img, i, j)
+          pad_img[i, j] = filter(pad_img, i, j)   
     
     self.image = pad_img[1:-1, 1:-1].copy()
+

@@ -26,7 +26,6 @@ def edge_detection(image, row, col):
 
 corgi = Image('images/corgi.jpg')
 
-corgi.apply_filter(box_blur)
-corgi.apply_filter(edge_detection)
+corgi.apply_filter([box_blur, edge_detection])
 
 corgi.display()
