@@ -32,9 +32,11 @@ class Image:
     cv2.destroyAllWindows()
 
 
-  def apply_filter(self, filter, iterations):
+  def apply_filter(self, filter, iterations = 1):
+    print('Applying filters to ' + self.path)
     rows, cols = self.image.shape
     def_img = self.image
+    # Expands image matrix by 1 pixel in each border
     pad_img = np.pad(def_img, (1, 1), 'constant')
 
     for k in range(iterations):

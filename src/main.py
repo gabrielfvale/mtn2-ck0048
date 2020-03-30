@@ -3,8 +3,6 @@ from Image import Image
 import math
 import numpy as np
 
-corgi = Image('images/corgi.jpg')
-
 
 def box_blur(image, row, col):
   h = image[row-1, col] + image[row+1, col]
@@ -13,11 +11,22 @@ def box_blur(image, row, col):
 
 
 def gaussian_blur(image, row, col):
-  h = 2*image[row-1, col] + 2*image[row+1, col]
-  v = 2*image[row, col-1] + 2*image[row, col+1]
+  h = 2*image[row, col-1] + 2*image[row, col+1]
+  v = 2*image[row-1, col] + 2*image[row+1, col]
   d = image[row-1, col+1] + image[row+1, col+1] + image[row+1, col-1] + image[row-1, col-1]
   return (h + v + d)/16
 
 
-corgi.apply_filter(box_blur, 3)
+def edge_detection(image, row, col):
+  h = image[row, col+1]/2 - image[row, col-1]/2
+  v = image[row-1, col]/2 - image[row+1,col]/2
+  r = abs(h + v)
+  return r if r <= 1 else 1
+
+
+corgi = Image('images/corgi.jpg')
+
+corgi.apply_filter(box_blur)
+corgi.apply_filter(edge_detection)
+
 corgi.display()
