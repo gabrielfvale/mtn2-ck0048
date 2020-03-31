@@ -48,26 +48,20 @@ class Image:
     cv2.destroyAllWindows()
 
 
-  def apply_filter(self, filter):
+  def apply_filter(self, *filter):
     '''
     Applies a filter (function) to an image
     '''
+    print('Applying %s filter(s) to %s' % (len(filter), self.path))
+
     rows, cols = self.image.shape
     # Expands image matrix by 1 pixel in each border
     pad_img = np.pad(self.image, (1, 1), 'constant')
 
-    if type(filter) is list:
-      print('Applying %s filters to %s' % (len(filter), self.path))
-      for func in filter:
-        for i in range(1, rows):
-          for j in range(1, cols):
-            pad_img[i, j] = func(pad_img, i, j)
-
-    else:
-      print('Applying filter to %s' % (self.path))
+    for func in filter:
       for i in range(1, rows):
         for j in range(1, cols):
-          pad_img[i, j] = filter(pad_img, i, j)   
+          pad_img[i, j] = func(pad_img, i, j) 
     
     self.image = pad_img[1:-1, 1:-1].copy()
 

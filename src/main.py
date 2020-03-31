@@ -24,8 +24,7 @@ def edge_detection(image, row, col):
   return r if r <= 1 else 1
 
 
-corgi = Image('images/corgi.jpg')
+cubes = Image('images/cubes.png')
 
-corgi.apply_filter([box_blur, edge_detection])
-
-corgi.display()
+cubes.apply_filter(box_blur, edge_detection)
+cubes.display()
