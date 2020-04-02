@@ -14,7 +14,8 @@ def gaussian_blur(image, row, col):
   h = 2*image[row, col-1] + 2*image[row, col+1]
   v = 2*image[row-1, col] + 2*image[row+1, col]
   d = image[row-1, col+1] + image[row+1, col+1] + image[row+1, col-1] + image[row-1, col-1]
-  return (h + v + d)/16
+  c = image[row, col] * 4
+  return (c + h + v + d)/16
 
 
 def edge_detection(image, row, col):
