@@ -1,3 +1,9 @@
+'''
+Métodos Numéricos II
+ - Gabriel Freire do Vale (418788)
+ - Pedro Ernesto de Oliveira Primo (418465)
+'''
+
 from Image import Image
 
 import math
